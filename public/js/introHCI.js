@@ -1,5 +1,3 @@
-'use strict';
-
 // Call this function when the page loads (the "ready" event)
 $(document).ready(function() {
 	initializePage();
@@ -10,8 +8,15 @@ $(document).ready(function() {
  */
 function initializePage() {
 	$('.project a').click(addProjectDetails);
+}
 
-	// $('#colorBtn').click(randomizeColors);
+function addProject(data) {
+	var projectHTML =
+		'<p>'+data['title']+'</p>'+
+		'<p><small>' + data['date'] +'</small></p>'+
+		'<img src="' + data['image'] + '" class="detailsImage">' +
+		'<p>' + data['summary'] + '</p>'; 
+	return projectHTML;
 }
 
 /*
@@ -25,6 +30,14 @@ function addProjectDetails(e) {
 	var projectID = $(this).closest('.project').attr('id');
 	// get rid of 'project' from the front of the id 'project3'
 	var idNumber = projectID.substr('project'.length);
+
+	var dest = "/project/"+idNumber;
+
+	$.get(dest, function(result){
+		var html = addProject(result);
+		console.log(html);
+		var details = $("div #"+projectID).find(".details").html(html);
+	});
 
 	console.log("User clicked on project " + idNumber);
 }
